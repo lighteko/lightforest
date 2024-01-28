@@ -10,14 +10,17 @@ class ToDoDaily extends StatelessWidget {
         appBar: AppBar(
           actions: [
             ColorFiltered(
-              colorFilter: const ColorFilter.mode(Colors.black, BlendMode.srcIn),
-              child: Image.asset(
-                'lightforest_appbar_logo.png', // Replace with the path to your image asset
-                width: 40.0,
-                height: 40.0,
-              ),
+              colorFilter:
+                  const ColorFilter.mode(Colors.black, BlendMode.srcIn),
+              child: Image.asset('assets/lightforest_appbar_logo.png'),
             ),
           ],
+        ),
+        body: ElevatedButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          child: Text("PREV"),
         ),
       ),
     );
