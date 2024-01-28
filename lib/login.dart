@@ -1,8 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:lightforest/todo_daily.dart';
+import 'dart:io';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
+
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  TextEditingController _nicknameController = TextEditingController();
+  TextEditingController _passwordController = TextEditingController();
+  void onPressed(BuildContext context) {}
 
   @override
   Widget build(BuildContext context) {
@@ -64,13 +74,14 @@ class LoginPage extends StatelessWidget {
                           ),
                         ],
                       ),
-                      child: const Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 20),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             TextField(
-                              decoration: InputDecoration(
+                              controller: _nicknameController,
+                              decoration: const InputDecoration(
                                   border: InputBorder.none,
                                   labelText: 'Nickname',
                                   labelStyle: TextStyle(
@@ -79,12 +90,14 @@ class LoginPage extends StatelessWidget {
                                   contentPadding:
                                       EdgeInsets.symmetric(vertical: 15.0)),
                             ),
-                            SizedBox(
+                            const SizedBox(
                                 width: 500,
                                 child: Divider(
                                     color: Color(0xff620090), thickness: 1.1)),
                             TextField(
-                              decoration: InputDecoration(
+                              controller: _passwordController,
+                              obscureText: true,
+                              decoration: const InputDecoration(
                                   border: InputBorder.none,
                                   labelText: 'Password',
                                   labelStyle: TextStyle(
@@ -109,6 +122,8 @@ class LoginPage extends StatelessWidget {
                   children: [
                     ElevatedButton(
                       onPressed: () {
+                        print(_nicknameController.text);
+                        print(_passwordController.text);
                         Navigator.push(
                           context,
                           MaterialPageRoute(
