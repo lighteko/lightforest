@@ -39,6 +39,12 @@ class MainApp extends StatelessWidget {
               ),
             ),
             Column(
+              children: [
+                const SizedBox(height: 100),
+                Image.asset('lightforest_main.png'),
+              ],
+            ),
+            Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const SizedBox(height: 300),
