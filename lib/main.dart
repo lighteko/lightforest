@@ -74,11 +74,12 @@ class MainApp extends StatelessWidget {
                                     color: Color(0xff620090),
                                   ),
                                   contentPadding:
-                                      EdgeInsets.symmetric(vertical: 20.0)),
+                                      EdgeInsets.symmetric(vertical: 15.0)),
                             ),
                             SizedBox(
-                              height: 5,
-                            ),
+                                width: 500,
+                                child: Divider(
+                                    color: Color(0xff620090), thickness: 1.1)),
                             TextField(
                               decoration: InputDecoration(
                                   border: InputBorder.none,
@@ -87,7 +88,7 @@ class MainApp extends StatelessWidget {
                                     color: Color(0xff620090),
                                   ),
                                   contentPadding:
-                                      EdgeInsets.symmetric(vertical: 20.0)),
+                                      EdgeInsets.symmetric(vertical: 15.0)),
                             ),
                           ],
                         ),

@@ -17,3 +17,6 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+   - lightforest_appbar_logo.png
+   - lightforest_main.png
