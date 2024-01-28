@@ -1,3 +1,3 @@
 # lightforest
 
-A new Flutter project.
+Simple Todo List Web App
