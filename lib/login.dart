@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:lightforest/todo_daily.dart';
 import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
 import 'dart:convert';
 
@@ -17,17 +18,6 @@ class _LoginPageState extends State<LoginPage> {
   final _passwordController = TextEditingController();
   final _emailController = TextEditingController();
   final _authentication = FirebaseAuth.instance;
-  List _users = [];
-
-  void onPressed(BuildContext context) {}
-
-  Future<void> readJson() async {
-    final String response = await rootBundle.loadString('assets/sample.json');
-    final data = await json.decode(response);
-    setState(() {
-      _users = data["users"];
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -156,15 +146,24 @@ class _LoginPageState extends State<LoginPage> {
                         String nickname = _nicknameController.text;
                         String password = _passwordController.text;
                         String email = _emailController.text;
-                        bool isSignedIn = false;
 
                         try {
-                          final newUser =
-                              await _authentication.signInWithEmailAndPassword(
-                                  email: email, password: password);
-                          _nicknameController.text = "";
-                          _passwordController.text = "";
-                          _emailController.text = "";
+                          final prefs = await SharedPreferences.getInstance();
+                          if (prefs.getString("email") != null) {
+                            await _authentication.signInWithEmailAndPassword(
+                              email: prefs.getString("email")!,
+                              password: prefs.getString("password")!,
+                            );
+                          } else {
+                            await _authentication.signInWithEmailAndPassword(
+                                email: email, password: password);
+                            _nicknameController.text = "";
+                            _passwordController.text = "";
+                            _emailController.text = "";
+                            await prefs.setString("email", email);
+                            await prefs.setString("password", password);
+                          }
+
                           if (!mounted) return;
                           Navigator.push(
                             context,
@@ -174,7 +173,7 @@ class _LoginPageState extends State<LoginPage> {
                           );
                         } catch (e) {
                           try {
-                            final newUser = await _authentication
+                            await _authentication
                                 .createUserWithEmailAndPassword(
                                     email: email, password: password);
                             _nicknameController.text = "";

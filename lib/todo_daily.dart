@@ -42,6 +42,7 @@ class _ToDoDailyState extends State<ToDoDaily> {
             ),
             ElevatedButton(
               onPressed: () {
+                _authentication.signOut();
                 Navigator.pop(context);
               },
               child: Text("PREV"),
