@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:lightforest/todo_daily.dart';
@@ -18,6 +19,7 @@ class _LoginPageState extends State<LoginPage> {
   final _passwordController = TextEditingController();
   final _emailController = TextEditingController();
   final _authentication = FirebaseAuth.instance;
+  final _database = FirebaseFirestore.instance;
 
   void autoLogin() async {
     final prefs = await SharedPreferences.getInstance();
@@ -36,9 +38,23 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
+  Future<void> _addUser(String nickname, String email) async {
+    DocumentReference user = await _database.collection("users").add({
+      "nickname": nickname,
+      "email": email,
+    });
+
+    await user.collection("required-tasks").add({
+      "completed": [],
+    });
+
+    await user.collection("additional-tasks").add({
+      "tasks": [],
+    });
+  }
+
   @override
   void initState() {
-    // TODO: implement initState
     autoLogin();
     super.initState();
   }
@@ -178,7 +194,7 @@ class _LoginPageState extends State<LoginPage> {
                           _nicknameController.text = "";
                           _passwordController.text = "";
                           _emailController.text = "";
-                          await prefs.setString("nickname", nickname);
+
                           await prefs.setString("email", email);
                           await prefs.setString("password", password);
 
@@ -197,6 +213,7 @@ class _LoginPageState extends State<LoginPage> {
                             _nicknameController.text = "";
                             _passwordController.text = "";
                             _emailController.text = "";
+                            _addUser(nickname, email);
                             if (!mounted) return;
                             Navigator.push(
                               context,
