@@ -19,6 +19,30 @@ class _LoginPageState extends State<LoginPage> {
   final _emailController = TextEditingController();
   final _authentication = FirebaseAuth.instance;
 
+  void autoLogin() async {
+    final prefs = await SharedPreferences.getInstance();
+    if (prefs.getString("email") != null) {
+      await _authentication.signInWithEmailAndPassword(
+        email: prefs.getString("email")!,
+        password: prefs.getString("password")!,
+      );
+      if (!mounted) return;
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const ToDoDaily(),
+        ),
+      );
+    }
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    autoLogin();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -149,20 +173,14 @@ class _LoginPageState extends State<LoginPage> {
 
                         try {
                           final prefs = await SharedPreferences.getInstance();
-                          if (prefs.getString("email") != null) {
-                            await _authentication.signInWithEmailAndPassword(
-                              email: prefs.getString("email")!,
-                              password: prefs.getString("password")!,
-                            );
-                          } else {
-                            await _authentication.signInWithEmailAndPassword(
-                                email: email, password: password);
-                            _nicknameController.text = "";
-                            _passwordController.text = "";
-                            _emailController.text = "";
-                            await prefs.setString("email", email);
-                            await prefs.setString("password", password);
-                          }
+                          await _authentication.signInWithEmailAndPassword(
+                              email: email, password: password);
+                          _nicknameController.text = "";
+                          _passwordController.text = "";
+                          _emailController.text = "";
+                          await prefs.setString("nickname", nickname);
+                          await prefs.setString("email", email);
+                          await prefs.setString("password", password);
 
                           if (!mounted) return;
                           Navigator.push(

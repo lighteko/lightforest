@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:lightforest/login.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'firebase_options.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 // ...
@@ -18,8 +18,12 @@ Future main() async {
       messagingSenderId: dotenv.get("MESSAGINGSENDERID"),
       projectId: dotenv.get("PROJECTID"),
     ));
+    FirebaseFirestore.instance.settings = const Settings(
+      persistenceEnabled: true,
+    );
   }
   await Firebase.initializeApp();
+
   runApp(const MainApp());
 }
 
