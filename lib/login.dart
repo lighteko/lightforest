@@ -1,6 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:lightforest/todo_daily.dart';
-import 'dart:io';
+import 'package:flutter/services.dart';
+import 'dart:async';
+import 'dart:convert';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -10,9 +13,21 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  TextEditingController _nicknameController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
+  final _nicknameController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _authentication = FirebaseAuth.instance;
+  List _users = [];
+
   void onPressed(BuildContext context) {}
+
+  Future<void> readJson() async {
+    final String response = await rootBundle.loadString('assets/sample.json');
+    final data = await json.decode(response);
+    setState(() {
+      _users = data["users"];
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +75,7 @@ class _LoginPageState extends State<LoginPage> {
                   children: [
                     Container(
                       width: 300,
-                      height: 150,
+                      height: 200,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(30),
                         color: Colors.white,
@@ -88,7 +103,23 @@ class _LoginPageState extends State<LoginPage> {
                                     color: Color(0xff620090),
                                   ),
                                   contentPadding:
-                                      EdgeInsets.symmetric(vertical: 15.0)),
+                                      EdgeInsets.symmetric(vertical: 10.0)),
+                            ),
+                            const SizedBox(
+                                width: 500,
+                                child: Divider(
+                                    color: Color(0xff620090), thickness: 1.1)),
+                            TextField(
+                              keyboardType: TextInputType.emailAddress,
+                              controller: _emailController,
+                              decoration: const InputDecoration(
+                                  border: InputBorder.none,
+                                  labelText: 'Email',
+                                  labelStyle: TextStyle(
+                                    color: Color(0xff620090),
+                                  ),
+                                  contentPadding:
+                                      EdgeInsets.symmetric(vertical: 10.0)),
                             ),
                             const SizedBox(
                                 width: 500,
@@ -104,7 +135,7 @@ class _LoginPageState extends State<LoginPage> {
                                     color: Color(0xff620090),
                                   ),
                                   contentPadding:
-                                      EdgeInsets.symmetric(vertical: 15.0)),
+                                      EdgeInsets.symmetric(vertical: 10.0)),
                             ),
                           ],
                         ),
@@ -121,15 +152,62 @@ class _LoginPageState extends State<LoginPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     ElevatedButton(
-                      onPressed: () {
-                        print(_nicknameController.text);
-                        print(_passwordController.text);
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const ToDoDaily(),
-                          ),
-                        );
+                      onPressed: () async {
+                        String nickname = _nicknameController.text;
+                        String password = _passwordController.text;
+                        String email = _emailController.text;
+                        bool isSignedIn = false;
+
+                        try {
+                          final newUser =
+                              await _authentication.signInWithEmailAndPassword(
+                                  email: email, password: password);
+                          _nicknameController.text = "";
+                          _passwordController.text = "";
+                          _emailController.text = "";
+                          if (!mounted) return;
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const ToDoDaily(),
+                            ),
+                          );
+                        } catch (e) {
+                          try {
+                            final newUser = await _authentication
+                                .createUserWithEmailAndPassword(
+                                    email: email, password: password);
+                            _nicknameController.text = "";
+                            _passwordController.text = "";
+                            _emailController.text = "";
+                            if (!mounted) return;
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const ToDoDaily(),
+                              ),
+                            );
+                          } catch (e) {
+                            if (!mounted) return;
+                            showDialog(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                title: const Text("인증 실패"),
+                                content: const Text(
+                                    "이메일과 비밀번호를 다시 한번 확인해 주세요\n비밀번호는 6자 이상 입니다"),
+                                actions: <Widget>[
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context)
+                                          .pop(); // Close the dialog
+                                    },
+                                    child: const Text('OK'),
+                                  ),
+                                ],
+                              ),
+                            );
+                          }
+                        }
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(
@@ -140,7 +218,7 @@ class _LoginPageState extends State<LoginPage> {
                         height: 60,
                         child: Center(
                           child: Text(
-                            "LOG IN / SIGN IN",
+                            "LOG IN / SIGN UP",
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 20,
