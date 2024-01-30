@@ -29,31 +29,10 @@ class _ToDoDailyState extends State<ToDoDaily> {
   late Future<LinkedHashMap> events;
   User? loggedUser;
 
-  bool isBibleEnabled = true;
-  bool isPrayEnabled = true;
-  bool isExerciseEnabled = true;
-
   @override
   void initState() {
     super.initState();
     getCurrentUser();
-    _database
-        .collection("users")
-        .where("email", isEqualTo: loggedUser!.email)
-        .snapshots()
-        .listen((event) {
-      final date =
-          "${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}";
-      var data = event.docs[0].data()["tasks"]["required"];
-      for (var d in data) {
-        if (d["date"] == date) {
-          if (d["bible"] == true) isBibleEnabled = false;
-          if (d["pray"] == true) isPrayEnabled = false;
-          if (d["exercise"] == true) isExerciseEnabled = false;
-          break;
-        }
-      }
-    });
   }
 
   void getCurrentUser() {
@@ -97,9 +76,6 @@ class _ToDoDailyState extends State<ToDoDaily> {
           .doc(event.docs[0].id)
           .set(data, SetOptions(merge: true));
     });
-    setState(() {
-      isBibleEnabled = false;
-    });
   }
 
   void _onPrayPressed() {
@@ -134,9 +110,6 @@ class _ToDoDailyState extends State<ToDoDaily> {
           .doc(event.docs[0].id)
           .set(data, SetOptions(merge: true));
     });
-    setState(() {
-      isPrayEnabled = false;
-    });
   }
 
   void _onExercisePressed() {
@@ -170,9 +143,6 @@ class _ToDoDailyState extends State<ToDoDaily> {
           .collection("users")
           .doc(event.docs[0].id)
           .set(data, SetOptions(merge: true));
-    });
-    setState(() {
-      isExerciseEnabled = false;
     });
   }
 
@@ -228,11 +198,11 @@ class _ToDoDailyState extends State<ToDoDaily> {
                       final doc = snapshot.data!.docs[0].data();
                       final completed = doc["tasks"]["required"];
                       List<DateTime> days = [];
-                      for (var day in completed) {
-                        if (day["bible"] == true &&
-                            day["pray"] == true &&
-                            day["exercise"] == true) {
-                          final date = day["date"];
+                      for (var task in completed) {
+                        if (task["bible"] == true &&
+                            task["pray"] == true &&
+                            task["exercise"] == true) {
+                          final date = task["date"];
                           final dayTemp = date.split("-");
                           days.add(DateTime(int.parse(dayTemp[0]),
                               int.parse(dayTemp[1]), int.parse(dayTemp[2])));
@@ -275,8 +245,32 @@ class _ToDoDailyState extends State<ToDoDaily> {
                   height: 20,
                 ),
                 StreamBuilder(
-                    stream: null,
+                    stream: _database
+                        .collection("users")
+                        .where("email", isEqualTo: loggedUser!.email)
+                        .snapshots(),
                     builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      }
+                      final doc = snapshot.data!.docs[0].data();
+                      final completed = doc["tasks"]["required"];
+                      final date =
+                          "${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}";
+                      bool isBibleEnabled = true;
+                      bool isPrayEnabled = true;
+                      bool isExerciseEnabled = true;
+                      for (var task in completed) {
+                        if (task["date"] == date) {
+                          task["bible"] != null ? isBibleEnabled = false : null;
+                          task["pray"] != null ? isPrayEnabled = false : null;
+                          task["exercise"] != null
+                              ? isExerciseEnabled = false
+                              : null;
+                        }
+                      }
                       return Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
