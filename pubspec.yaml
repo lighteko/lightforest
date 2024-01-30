@@ -26,4 +26,7 @@ flutter:
   assets:
     - assets/lightforest_main.png
     - assets/lightforest_appbar_logo.png
+    - assets/bible_icon.png
+    - assets/praying_hand_icon.png
+    - assets/exercise_icon.png
     - .env
