@@ -1,29 +1,24 @@
 import 'package:flutter/foundation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:lightforest/firebase_options.dart';
 import 'package:lightforest/login.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-
+import 'package:intl/date_symbol_data_local.dart';
 // ...
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await dotenv.load(fileName: ".env");
   if (kIsWeb) {
     await Firebase.initializeApp(
-        options: FirebaseOptions(
-      apiKey: dotenv.get("APIKEY"),
-      appId: dotenv.get("APPID"),
-      messagingSenderId: dotenv.get("MESSAGINGSENDERID"),
-      projectId: dotenv.get("PROJECTID"),
-    ));
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
     FirebaseFirestore.instance.settings = const Settings(
       persistenceEnabled: true,
     );
   }
   await Firebase.initializeApp();
-
+  await initializeDateFormatting();
   runApp(const MainApp());
 }
 

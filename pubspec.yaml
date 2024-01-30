@@ -14,7 +14,7 @@ dependencies:
   table_calendar: ^3.0.9
   flutter:
     sdk: flutter
-  flutter_dotenv: ^5.1.0
+  intl: ^0.18.1
 
 dev_dependencies:
   flutter_test:
@@ -29,4 +29,3 @@ flutter:
     - assets/bible_icon.png
     - assets/praying_hand_icon.png
     - assets/exercise_icon.png
-    - .env
