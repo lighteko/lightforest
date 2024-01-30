@@ -16,11 +16,22 @@ class _ToDoDailyState extends State<ToDoDaily> {
   final _database = FirebaseFirestore.instance;
   final _taskController = TextEditingController();
   User? loggedUser;
+  bool isBibleEnabled = true;
+  bool isPrayEnabled = true;
+  bool isExerciseEnabled = true;
+  List<Map<String, bool>> requiredTasks = [];
 
   @override
   void initState() {
     super.initState();
     getCurrentUser();
+    _database
+        .collection("users")
+        .where("email", isEqualTo: loggedUser!.email)
+        .snapshots()
+        .listen((event) {
+      print(event.docs[0].data()["tasks"]);
+    });
   }
 
   void getCurrentUser() {
@@ -30,6 +41,24 @@ class _ToDoDailyState extends State<ToDoDaily> {
     } catch (e) {
       print(e);
     }
+  }
+
+  void _onBiblePressed() {
+    setState(() {
+      isBibleEnabled = false;
+    });
+  }
+
+  void _onPrayPressed() {
+    setState(() {
+      isPrayEnabled = false;
+    });
+  }
+
+  void _onExercisePressed() {
+    setState(() {
+      isExerciseEnabled = false;
+    });
   }
 
   @override
@@ -68,7 +97,7 @@ class _ToDoDailyState extends State<ToDoDaily> {
             child: Column(
               children: [
                 const SizedBox(
-                  height: 70,
+                  height: 40,
                 ),
                 TableCalendar(
                   firstDay: DateTime.utc(2021, 10, 16),
@@ -82,8 +111,10 @@ class _ToDoDailyState extends State<ToDoDaily> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     ElevatedButton(
-                      onPressed: () {},
+                      onPressed:
+                          isBibleEnabled ? () => _onBiblePressed() : null,
                       style: ElevatedButton.styleFrom(
+                        disabledBackgroundColor: const Color(0xff8C7B99),
                         foregroundColor:
                             const Color.fromARGB(255, 255, 255, 255),
                         backgroundColor: const Color(0xff7D4598),
@@ -98,8 +129,9 @@ class _ToDoDailyState extends State<ToDoDaily> {
                       width: 50,
                     ),
                     ElevatedButton(
-                      onPressed: () {},
+                      onPressed: isPrayEnabled ? () => _onPrayPressed() : null,
                       style: ElevatedButton.styleFrom(
+                        disabledBackgroundColor: const Color(0xff8C7B99),
                         foregroundColor:
                             const Color.fromARGB(255, 255, 255, 255),
                         backgroundColor: const Color(0xff7D4598),
@@ -114,8 +146,10 @@ class _ToDoDailyState extends State<ToDoDaily> {
                       width: 50,
                     ),
                     ElevatedButton(
-                      onPressed: () {},
+                      onPressed:
+                          isExerciseEnabled ? () => _onExercisePressed() : null,
                       style: ElevatedButton.styleFrom(
+                        disabledBackgroundColor: const Color(0xff8C7B99),
                         foregroundColor:
                             const Color.fromARGB(255, 255, 255, 255),
                         backgroundColor: const Color(0xff7D4598),
@@ -128,8 +162,8 @@ class _ToDoDailyState extends State<ToDoDaily> {
                     ),
                   ],
                 ),
-                SizedBox(
-                  height: 30,
+                const SizedBox(
+                  height: 20,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -145,14 +179,14 @@ class _ToDoDailyState extends State<ToDoDaily> {
                                 color: Colors.grey.withOpacity(0.25),
                                 spreadRadius: 5,
                                 blurRadius: 18.7,
-                                offset: Offset(0, 4),
+                                offset: const Offset(0, 4),
                               ),
                             ],
                           ),
                           width: 380,
                           height: 200,
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 50,
                         ),
                         Row(
@@ -175,20 +209,21 @@ class _ToDoDailyState extends State<ToDoDaily> {
                                 ],
                               ),
                               child: Padding(
-                                padding: EdgeInsets.all(10.0),
+                                padding: const EdgeInsets.all(10.0),
                                 child: TextField(
                                   controller: _taskController,
                                   decoration: InputDecoration(
                                     border: InputBorder.none,
                                     hintText: '할 일 입력',
                                     hintStyle: TextStyle(
-                                      color: Color(0xff620090).withOpacity(0.8),
+                                      color: const Color(0xff620090)
+                                          .withOpacity(0.8),
                                     ),
                                   ),
                                 ),
                               ),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               width: 10,
                             ),
                             ElevatedButton(
@@ -202,7 +237,7 @@ class _ToDoDailyState extends State<ToDoDaily> {
                                 ),
                                 minimumSize: const Size(50, 50),
                               ),
-                              child: Icon(Icons.add),
+                              child: const Icon(Icons.add),
                             ),
                           ],
                         )

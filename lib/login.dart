@@ -40,14 +40,10 @@ class _LoginPageState extends State<LoginPage> {
     DocumentReference user = await _database.collection("users").add({
       "nickname": nickname,
       "email": email,
-    });
-
-    await user.collection("required-tasks").add({
-      "completed": [],
-    });
-
-    await user.collection("additional-tasks").add({
-      "tasks": [],
+      "tasks": {
+        "required": [],
+        "additional": [],
+      }
     });
   }
 
