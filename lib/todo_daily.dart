@@ -16,48 +16,148 @@ class _ToDoDailyState extends State<ToDoDaily> {
   final _database = FirebaseFirestore.instance;
   final _taskController = TextEditingController();
   User? loggedUser;
+  late DocumentSnapshot<Map<String, dynamic>> essentials;
   bool isBibleEnabled = true;
   bool isPrayEnabled = true;
   bool isExerciseEnabled = true;
-  List<Map<String, bool>> requiredTasks = [];
 
   @override
-  void initState() {
-    super.initState();
-    getCurrentUser();
+  void didUpdateWidget(covariant ToDoDaily oldWidget) {
+    // TODO: implement didUpdateWidget
+    super.didUpdateWidget(oldWidget);
     _database
         .collection("users")
         .where("email", isEqualTo: loggedUser!.email)
         .snapshots()
         .listen((event) {
-      print(event.docs[0].data()["tasks"]);
+      final date =
+          "${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}";
+      var data = event.docs[0].data()["tasks"]["required"];
+      for (var d in data) {
+        if (d["date"] == date) {
+          if (d["bible"] == true) isBibleEnabled = false;
+          if (d["pray"] == true) isPrayEnabled = false;
+          if (d["exercise"] == true) isExerciseEnabled = false;
+          break;
+        }
+      }
     });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getCurrentUser();
   }
 
   void getCurrentUser() {
     try {
       final user = _authentication.currentUser;
-      if (user != null) print((loggedUser = user).email);
+      if (user != null) loggedUser = user;
     } catch (e) {
-      print(e);
+      //
     }
   }
 
   void _onBiblePressed() {
-    setState(() {
-      isBibleEnabled = false;
+    final date =
+        "${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}";
+    Map<String, dynamic> taskData = {};
+    _database
+        .collection("users")
+        .where("email", isEqualTo: loggedUser!.email)
+        .snapshots()
+        .listen((event) {
+      var data = event.docs[0].data();
+      final reqs = data["tasks"]["required"];
+      int index = -1;
+      for (int i = 0; i < reqs.length; i++) {
+        index = i;
+        if (reqs[0]["date"] == date) {
+          taskData = reqs[i];
+          break;
+        }
+      }
+      taskData["bible"] = true;
+      if (index >= 0) {
+        reqs[index] = taskData;
+      } else {
+        taskData["date"] = date;
+        reqs.add(taskData);
+      }
+      data["tasks"]["required"] = reqs;
+      _database
+          .collection("users")
+          .doc(event.docs[0].id)
+          .set(data, SetOptions(merge: true));
     });
   }
 
   void _onPrayPressed() {
-    setState(() {
-      isPrayEnabled = false;
+    final date =
+        "${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}";
+    Map<String, dynamic> taskData = {};
+    _database
+        .collection("users")
+        .where("email", isEqualTo: loggedUser!.email)
+        .snapshots()
+        .listen((event) {
+      var data = event.docs[0].data();
+      final reqs = data["tasks"]["required"];
+      int index = -1;
+      for (int i = 0; i < reqs.length; i++) {
+        index = i;
+        if (reqs[0]["date"] == date) {
+          taskData = reqs[i];
+          break;
+        }
+      }
+      taskData["pray"] = true;
+      if (index >= 0) {
+        reqs[index] = taskData;
+      } else {
+        taskData["date"] = date;
+        reqs.add(taskData);
+      }
+      data["tasks"]["required"] = reqs;
+      _database
+          .collection("users")
+          .doc(event.docs[0].id)
+          .set(data, SetOptions(merge: true));
     });
   }
 
   void _onExercisePressed() {
-    setState(() {
-      isExerciseEnabled = false;
+    final date =
+        "${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}";
+    Map<String, dynamic> taskData = {};
+    _database
+        .collection("users")
+        .where("email", isEqualTo: loggedUser!.email)
+        .snapshots()
+        .listen((event) {
+      var data = event.docs[0].data();
+      final reqs = data["tasks"]["required"];
+      int index = -1;
+      for (int i = 0; i < reqs.length; i++) {
+        index = i;
+        if (reqs[0]["date"] == date) {
+          taskData = reqs[i];
+          break;
+        }
+      }
+      taskData["exercise"] = true;
+      if (index >= 0) {
+        reqs[index] = taskData;
+      } else {
+        taskData["date"] = date;
+        reqs.add(taskData);
+      }
+      data["tasks"]["required"] = reqs;
+      _database
+          .collection("users")
+          .doc(event.docs[0].id)
+          .set(data, SetOptions(merge: true));
     });
   }
 

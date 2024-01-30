@@ -37,7 +37,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future<void> _addUser(String nickname, String email) async {
-    DocumentReference user = await _database.collection("users").add({
+    await _database.collection("users").add({
       "nickname": nickname,
       "email": email,
       "tasks": {
