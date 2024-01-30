@@ -191,8 +191,69 @@ class _ToDoDailyState extends State<ToDoDaily> {
                         .snapshots(),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const Center(
-                          child: CircularProgressIndicator(),
+                        return TableCalendar(
+                          locale: "ko_KR",
+                          daysOfWeekHeight: 30,
+                          rowHeight: 60,
+                          calendarStyle:
+                              const CalendarStyle(outsideDaysVisible: false),
+                          firstDay: DateTime.utc(2021, 10, 16),
+                          lastDay: DateTime.utc(2030, 3, 14),
+                          focusedDay: DateTime.now(),
+                          calendarFormat: _calendarFormat,
+                          calendarBuilders: CalendarBuilders(
+                            defaultBuilder: (context, day, focusedDay) {
+                              return Container(
+                                width: 50,
+                                height: 50,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Center(
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(bottom: 20),
+                                    child: Text(
+                                      "${day.day}",
+                                      style: const TextStyle(
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                            todayBuilder: (context, day, focusedDay) {
+                              return Container(
+                                width: 50,
+                                height: 50,
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                      color: const Color(0xff7D4598), width: 2),
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Center(
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(bottom: 21),
+                                    child: Text(
+                                      "${day.day}",
+                                      style: const TextStyle(
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                          availableCalendarFormats: const {
+                            CalendarFormat.month: '한 달 단위로',
+                            CalendarFormat.week: '1주 단위로',
+                          },
+                          onFormatChanged: (format) {
+                            setState(() {
+                              _calendarFormat = format;
+                            });
+                          },
                         );
                       }
                       final doc = snapshot.data!.docs[0].data();
@@ -221,15 +282,84 @@ class _ToDoDailyState extends State<ToDoDaily> {
                       return TableCalendar(
                         locale: "ko_KR",
                         daysOfWeekHeight: 30,
+                        rowHeight: 60,
                         eventLoader: (day) {
                           return events[
                                   DateTime(day.year, day.month, day.day)] ??
                               [];
                         },
+                        calendarStyle:
+                            const CalendarStyle(outsideDaysVisible: false),
                         firstDay: DateTime.utc(2021, 10, 16),
                         lastDay: DateTime.utc(2030, 3, 14),
                         focusedDay: DateTime.now(),
                         calendarFormat: _calendarFormat,
+                        calendarBuilders: CalendarBuilders(
+                          defaultBuilder: (context, day, focusedDay) {
+                            return Container(
+                              width: 50,
+                              height: 50,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Center(
+                                child: Padding(
+                                  padding: const EdgeInsets.only(bottom: 20),
+                                  child: Text(
+                                    "${day.day}",
+                                    style: const TextStyle(
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                          todayBuilder: (context, day, focusedDay) {
+                            return Container(
+                              width: 50,
+                              height: 50,
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                    color: const Color(0xff7D4598), width: 2),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Center(
+                                child: Padding(
+                                  padding: const EdgeInsets.only(bottom: 21),
+                                  child: Text(
+                                    "${day.day}",
+                                    style: const TextStyle(
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                          markerBuilder: (context, day, events) {
+                            if (events.isNotEmpty) {
+                              return Padding(
+                                padding: const EdgeInsets.only(bottom: 8),
+                                child: Container(
+                                  width: 20,
+                                  height: 20,
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xff9E3B35),
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: const Icon(
+                                    Icons.local_fire_department_rounded,
+                                    size: 18,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              );
+                            } else {
+                              return null;
+                            }
+                          },
+                        ),
                         availableCalendarFormats: const {
                           CalendarFormat.month: '한 달 단위로',
                           CalendarFormat.week: '1주 단위로',
