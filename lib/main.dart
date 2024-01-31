@@ -1,11 +1,10 @@
 import 'package:flutter/foundation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:lightforest/enterance.dart';
 import 'package:lightforest/firebase_options.dart';
-import 'package:lightforest/login.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:intl/date_symbol_data_local.dart';
-// ...
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -28,7 +27,7 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
-      home: LoginPage(),
+      home: Enterance(),
     );
   }
 }

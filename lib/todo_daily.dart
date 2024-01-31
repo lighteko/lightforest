@@ -25,7 +25,7 @@ class _ToDoDailyState extends State<ToDoDaily> {
   final _authentication = FirebaseAuth.instance;
   final _database = FirebaseFirestore.instance;
   final _taskController = TextEditingController();
-  CalendarFormat _calendarFormat = CalendarFormat.month;
+  CalendarFormat _calendarFormat = CalendarFormat.week;
   late Future<LinkedHashMap> events;
   User? loggedUser;
 
