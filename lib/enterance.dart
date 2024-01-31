@@ -153,24 +153,6 @@ class _EnteranceState extends State<Enterance> {
               ],
             ),
             Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const SizedBox(
-                  height: 200,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    InputBox(
-                      nicknameController: _nicknameController,
-                      emailController: _emailController,
-                      passwordController: _passwordController,
-                    ),
-                  ],
-                )
-              ],
-            ),
-            Column(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Padding(
@@ -201,6 +183,24 @@ class _EnteranceState extends State<Enterance> {
                     ],
                   ),
                 ),
+              ],
+            ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const SizedBox(
+                  height: 200,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    InputBox(
+                      nicknameController: _nicknameController,
+                      emailController: _emailController,
+                      passwordController: _passwordController,
+                    ),
+                  ],
+                )
               ],
             ),
           ],
