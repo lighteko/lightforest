@@ -176,7 +176,8 @@ class _ToDoDailyState extends State<ToDoDaily> {
             centerTitle: true,
             title: const Text(
               "lightforest",
-              style: TextStyle(fontFamily: 'LobsterRegular'),
+              style:
+                  TextStyle(fontFamily: 'LobsterRegular', color: Colors.white),
             ),
           ),
           resizeToAvoidBottomInset: true,
@@ -383,8 +384,56 @@ class _ToDoDailyState extends State<ToDoDaily> {
                         .snapshots(),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const Center(
-                          child: CircularProgressIndicator(),
+                        return Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            ElevatedButton(
+                              onPressed: null,
+                              style: ElevatedButton.styleFrom(
+                                disabledBackgroundColor:
+                                    const Color(0xff8C7B99),
+                                foregroundColor:
+                                    const Color.fromARGB(255, 255, 255, 255),
+                                backgroundColor: const Color(0xff7D4598),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(50),
+                                ),
+                                minimumSize: const Size(100, 100),
+                              ),
+                              child: Image.asset("assets/bible_icon.png"),
+                            ),
+                            ElevatedButton(
+                              onPressed: null,
+                              style: ElevatedButton.styleFrom(
+                                disabledBackgroundColor:
+                                    const Color(0xff8C7B99),
+                                foregroundColor:
+                                    const Color.fromARGB(255, 255, 255, 255),
+                                backgroundColor: const Color(0xff7D4598),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(50),
+                                ),
+                                minimumSize: const Size(100, 100),
+                              ),
+                              child:
+                                  Image.asset("assets/praying_hand_icon.png"),
+                            ),
+                            ElevatedButton(
+                              onPressed: null,
+                              style: ElevatedButton.styleFrom(
+                                disabledBackgroundColor:
+                                    const Color(0xff8C7B99),
+                                foregroundColor:
+                                    const Color.fromARGB(255, 255, 255, 255),
+                                backgroundColor: const Color(0xff7D4598),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(50),
+                                ),
+                                minimumSize: const Size(100, 100),
+                              ),
+                              child: Image.asset("assets/exercise_icon.png"),
+                            ),
+                          ],
                         );
                       }
                       final doc = snapshot.data!.docs[0].data();
