@@ -148,6 +148,7 @@ class _ToDoDailyState extends State<ToDoDaily> {
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
     return MaterialApp(
       home: GestureDetector(
         onTap: () {
@@ -172,9 +173,10 @@ class _ToDoDailyState extends State<ToDoDaily> {
                 Navigator.pop(context);
               },
             ),
-            title: SizedBox(
-              height: 300,
-              child: Image.asset("assets/lightforest_appbar_logo.png"),
+            centerTitle: true,
+            title: const Text(
+              "lightforest",
+              style: TextStyle(fontFamily: 'LobsterRegular'),
             ),
           ),
           resizeToAvoidBottomInset: true,
@@ -402,7 +404,7 @@ class _ToDoDailyState extends State<ToDoDaily> {
                         }
                       }
                       return Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           ElevatedButton(
                             onPressed:
@@ -419,9 +421,6 @@ class _ToDoDailyState extends State<ToDoDaily> {
                             ),
                             child: Image.asset("assets/bible_icon.png"),
                           ),
-                          const SizedBox(
-                            width: 50,
-                          ),
                           ElevatedButton(
                             onPressed:
                                 isPrayEnabled ? () => _onPrayPressed() : null,
@@ -436,9 +435,6 @@ class _ToDoDailyState extends State<ToDoDaily> {
                               minimumSize: const Size(100, 100),
                             ),
                             child: Image.asset("assets/praying_hand_icon.png"),
-                          ),
-                          const SizedBox(
-                            width: 50,
                           ),
                           ElevatedButton(
                             onPressed: isExerciseEnabled
@@ -480,61 +476,65 @@ class _ToDoDailyState extends State<ToDoDaily> {
                               ),
                             ],
                           ),
-                          width: 380,
+                          width: screenWidth * 0.85,
                           height: 200,
                         ),
                         const SizedBox(
                           height: 50,
                         ),
                         Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Container(
-                              width: 300,
-                              height: 40,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(30),
-                                color: Colors.white,
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: const Color(0xff818181)
-                                        .withOpacity(0.25),
-                                    spreadRadius: 0,
-                                    blurRadius: 35,
-                                    offset: const Offset(
-                                        0, 4), // changes position of shadow
-                                  ),
-                                ],
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(10.0),
-                                child: TextField(
-                                  controller: _taskController,
-                                  decoration: InputDecoration(
-                                    border: InputBorder.none,
-                                    hintText: '할 일 입력',
-                                    hintStyle: TextStyle(
-                                      color: const Color(0xff620090)
-                                          .withOpacity(0.8),
+                            FittedBox(
+                              child: Container(
+                                width: screenWidth * 0.7,
+                                height: 40,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(30),
+                                  color: Colors.white,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: const Color(0xff818181)
+                                          .withOpacity(0.25),
+                                      spreadRadius: 0,
+                                      blurRadius: 35,
+                                      offset: const Offset(
+                                          0, 4), // changes position of shadow
+                                    ),
+                                  ],
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 15, bottom: 3, right: 15),
+                                  child: TextField(
+                                    controller: _taskController,
+                                    decoration: InputDecoration(
+                                      border: InputBorder.none,
+                                      hintText: '할 일 입력',
+                                      hintStyle: TextStyle(
+                                        color: const Color(0xff620090)
+                                            .withOpacity(0.8),
+                                      ),
                                     ),
                                   ),
                                 ),
                               ),
                             ),
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            ElevatedButton(
-                              onPressed: () {},
-                              style: ElevatedButton.styleFrom(
-                                foregroundColor:
-                                    const Color.fromARGB(255, 255, 255, 255),
-                                backgroundColor: const Color(0xff7D4598),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(25),
+                            SizedBox(width: screenWidth * 0.05),
+                            FittedBox(
+                              child: ElevatedButton(
+                                onPressed: () {},
+                                style: ElevatedButton.styleFrom(
+                                  foregroundColor:
+                                      const Color.fromARGB(255, 255, 255, 255),
+                                  backgroundColor: const Color(0xff7D4598),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(25),
+                                  ),
+                                  minimumSize: Size(screenWidth * 0.05, 50),
                                 ),
-                                minimumSize: const Size(50, 50),
+                                child: const Icon(Icons.add),
                               ),
-                              child: const Icon(Icons.add),
                             ),
                           ],
                         )

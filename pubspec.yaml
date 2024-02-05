@@ -23,6 +23,12 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  fonts:
+      - family: LobsterRegular
+        fonts:
+          - asset: assets/font/Lobster-Regular.ttf
+            weight: 400
+  
   assets:
     - assets/lightforest_main.png
     - assets/lightforest_appbar_logo.png
